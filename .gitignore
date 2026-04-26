@@ -1,8 +1,0 @@
-env/
-data/*
-!data/.gitkeep
-outputs/
-*.pth
-__pycache__/
-*.pyc
-torch/

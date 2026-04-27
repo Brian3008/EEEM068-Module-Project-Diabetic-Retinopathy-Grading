@@ -18,19 +18,33 @@ evaluates performance using Accuracy and Quadratic Weighted Kappa (QWK).
 ------------------------------------------------------------------------
 
 ## Project Structure
-
-Baseline_model_training_V1/ │ ├── main.py ├── requirements.txt ├──
-README.md │ ├── src/ │ ├── dataset.py │ ├── model.py │ ├── train.py │
-├── eval.py │ └── plots.py │ ├── data/ │ ├── colored_images/ │ └──
-trainLabels.csv │ └── outputs/output_V1/ ├── best_model.pth └── plots/ ├──
-confusion_matrix.png └── training_curves.png
-
+```
+ConvNext/ 
+    ├── main.py 
+    ├── requirements.txt 
+    ├──README.md 
+    ├── src/ 
+    │ ├── dataset.py 
+    │ ├── model.py 
+    │ ├── train.py 
+    │ ├── eval.py 
+    │ └── plots.py 
+    │ ├── data/ 
+    │   ├── colored_images/ 
+    │   └──trainLabels.csv 
+    └── outputs/output_V1/ 
+      ├── best_model.pth 
+      └── plots/ 
+        ├── confusion_matrix.png 
+        └── training_curves.png
+```
 ------------------------------------------------------------------------
 
 ## Installation
 
-python3 -m venv env source env/bin/activate pip install -r
-requirements.txt
+-  python3 -m venv env 
+-  source env/bin/activate 
+-  pip install -r requirements.txt
 
 ------------------------------------------------------------------------
 
@@ -78,6 +92,7 @@ Baseline_model_training_V1
 
 ## Author
 
-https://github.com/gitnerd109
-Name: Bilimagga Ganesh Suhas
-University ID: 6970288
+-   https://github.com/gitnerd109
+-   Name: Bilimagga Ganesh Suhas
+-   University ID: 6970288
+-   @ University Of Surrey, UK

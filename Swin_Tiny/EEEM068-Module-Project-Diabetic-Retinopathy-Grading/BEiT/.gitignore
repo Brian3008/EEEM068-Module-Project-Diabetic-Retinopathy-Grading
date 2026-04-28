@@ -1,0 +1,15 @@
+# Don't upload the dataset — too large for GitHub
+data/
+*.jpeg
+*.jpg
+*.png
+!outputs_v3/plots/*.png
+
+# Don't upload virtual environment
+.venv/
+__pycache__/
+*.pyc
+
+# Don't upload large checkpoint files
+# Comment this out if you WANT to upload the model weights
+outputs_v3/checkpoints/

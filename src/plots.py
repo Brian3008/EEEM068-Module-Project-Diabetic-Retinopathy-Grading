@@ -1,31 +1,32 @@
-import os
+# plots.py — Shared plotting utilities
 
+import os
 import matplotlib.pyplot as plt
-import numpy as np
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
 from .config import cfg
 
 
-def _ensure_dir():
+def _ensure_plots_dir():
     os.makedirs(cfg.PLOTS_DIR, exist_ok=True)
 
 
 def plot_confusion_matrix(y_true, y_pred, class_names, save_path=None):
-    _ensure_dir()
+    _ensure_plots_dir()
     if save_path is None:
         save_path = os.path.join(cfg.PLOTS_DIR, "confusion_matrix.png")
 
     cm = confusion_matrix(y_true, y_pred)
-    cm_norm = cm.astype(float) / cm.sum(axis=1, keepdims=True).clip(min=1)
+    cm_norm = cm.astype(float) / cm.sum(axis=1, keepdims=True)
 
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+
     for ax, data, fmt, title in zip(
         axes,
         [cm, cm_norm],
         ["d", ".2%"],
-        ["Confusion Matrix (Counts)", "Confusion Matrix (Row-Normalised)"],
+        ["Confusion Matrix (Counts)", "Confusion Matrix (Normalised)"]
     ):
         sns.heatmap(data, annot=True, fmt=fmt, cmap="Blues",
                     xticklabels=class_names, yticklabels=class_names, ax=ax)
@@ -35,48 +36,30 @@ def plot_confusion_matrix(y_true, y_pred, class_names, save_path=None):
 
     plt.tight_layout()
     plt.savefig(save_path, dpi=150, bbox_inches="tight")
-    plt.close()
-    print(f"  saved {save_path}")
+    plt.show()
+    print(f"Saved → {save_path}")
 
 
 def plot_training_curves(history, save_path=None):
-    _ensure_dir()
+    _ensure_plots_dir()
     if save_path is None:
         save_path = os.path.join(cfg.PLOTS_DIR, "training_curves.png")
 
-    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
     epochs = range(1, len(history["train_loss"]) + 1)
 
-    axes[0].plot(epochs, history["train_loss"], label="Train", color="#3b82f6")
-    axes[0].plot(epochs, history["val_loss"], label="Val", color="#ef4444")
-    axes[0].set_title("Loss", fontweight="bold")
-    axes[0].set_xlabel("Epoch")
-    axes[0].set_ylabel("Loss")
-    axes[0].legend()
-    axes[0].grid(alpha=0.3)
+    axes[0].plot(epochs, history["train_loss"], label="Train Loss", color="#3b82f6")
+    axes[0].plot(epochs, history["val_loss"],   label="Val Loss",   color="#ef4444")
+    axes[0].set_title("Loss Curves", fontweight="bold")
+    axes[0].set_xlabel("Epoch"); axes[0].set_ylabel("Loss")
+    axes[0].legend(); axes[0].grid(alpha=0.3)
 
-    axes[1].plot(epochs, history["train_kappa"],
-                 label="Train", color="#22c55e")
-    axes[1].plot(epochs, history["val_kappa"],
-                 label="Val (raw)", color="#f97316")
-    if "val_kappa_tuned" in history and len(history["val_kappa_tuned"]):
-        axes[1].plot(epochs, history["val_kappa_tuned"],
-                     label="Val (tuned thresholds)", color="#a855f7")
+    axes[1].plot(epochs, history["train_kappa"], label="Train Kappa", color="#22c55e")
+    axes[1].plot(epochs, history["val_kappa"],   label="Val Kappa",   color="#f97316")
     axes[1].set_title("Quadratic Weighted Kappa", fontweight="bold")
-    axes[1].set_xlabel("Epoch")
-    axes[1].set_ylabel("QWK")
-    axes[1].legend()
-    axes[1].grid(alpha=0.3)
-
-    axes[2].plot(epochs, history["train_f1"], label="Train", color="#0ea5e9")
-    axes[2].plot(epochs, history["val_f1"], label="Val", color="#dc2626")
-    axes[2].set_title("Macro F1 Score", fontweight="bold")
-    axes[2].set_xlabel("Epoch")
-    axes[2].set_ylabel("F1")
-    axes[2].legend()
-    axes[2].grid(alpha=0.3)
+    axes[1].set_xlabel("Epoch"); axes[1].set_ylabel("QWK Score")
+    axes[1].legend(); axes[1].grid(alpha=0.3)
 
     plt.tight_layout()
     plt.savefig(save_path, dpi=150, bbox_inches="tight")
-    plt.close()
-    print(f"  saved {save_path}")
+    plt.show()

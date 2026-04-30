@@ -1,9 +1,0 @@
-data/
-*.jpeg
-*.jpg
-*.png
-!outputs_v7/plots/*.png
-.venv/
-__pycache__/
-*.pyc
-outputs_v7/checkpoints/

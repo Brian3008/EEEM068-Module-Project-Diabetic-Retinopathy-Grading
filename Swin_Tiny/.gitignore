@@ -11,6 +11,3 @@ __pycache__/
 # Ignore virtual environment
 venv/
 .env/
-
-# Ignore test setup file
-test_setup.py

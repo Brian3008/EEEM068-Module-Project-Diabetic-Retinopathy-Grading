@@ -4,7 +4,7 @@
 
 Model: BEiT-base-patch16-224
 
-Student: \[Your Name]
+Student: Nyi Nyi Myo Zin
 
 Module: EEEM068 Applied Machine Learning
 

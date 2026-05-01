@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual envs.venv/
+bp00798_venv/
+
+# Data and outputs for efficient_net_v2
+efficient_net_v2/src/data/processed/
+efficient_net_v2/src/data/colored_images/
+efficient_net_v2/outputs/
+efficient_net_v2/*.zip
+
+# OS/editor.DS_Store
+*.swp

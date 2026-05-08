@@ -1,12 +1,11 @@
 import torch
+import numpy as np
 from sklearn.metrics import accuracy_score, cohen_kappa_score
 
-def evaluate(model, loader, criterion, device):
+def evaluate(model, loader, device):
     model.eval()
 
-    all_preds = []
-    all_labels = []
-    running_loss = 0
+    preds, targets = [], []
 
     with torch.no_grad():
         for images, labels in loader:
@@ -14,17 +13,17 @@ def evaluate(model, loader, criterion, device):
             labels = labels.to(device)
 
             outputs = model(images)
-            loss = criterion(outputs, labels)
 
-            running_loss += loss.item()
+            probs = torch.softmax(outputs, dim=1)
 
-            preds = outputs.argmax(dim=1)
+            # QWK-friendly prediction (VERY IMPORTANT)
+            expected = torch.sum(probs * torch.arange(5).to(device), dim=1)
+            pred = torch.round(expected)
 
-            all_preds.extend(preds.cpu().numpy())
-            all_labels.extend(labels.cpu().numpy())
+            preds.extend(pred.cpu().numpy())
+            targets.extend(labels.cpu().numpy())
 
-    avg_loss = running_loss / len(loader)
-    acc = accuracy_score(all_labels, all_preds)
-    qwk = cohen_kappa_score(all_labels, all_preds, weights="quadratic")
+    acc = accuracy_score(targets, preds)
+    qwk = cohen_kappa_score(targets, preds, weights="quadratic")
 
-    return avg_loss, acc, qwk, all_labels, all_preds
+    return acc, qwk

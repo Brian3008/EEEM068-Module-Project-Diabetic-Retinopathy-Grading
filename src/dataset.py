@@ -1,34 +1,58 @@
 import os
-import torch
+import pandas as pd
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
-import pandas as pd
+from torch.utils.data import DataLoader
+
+def get_transforms():
+
+    train_transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomRotation(10),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            [0.485, 0.456, 0.406],
+            [0.229, 0.224, 0.225]
+        )
+    ])
+
+    val_transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            [0.485, 0.456, 0.406],
+            [0.229, 0.224, 0.225]
+        )
+    ])
+
+    return train_transform, val_transform
 
 
-class RetinopathyDataset(Dataset):
-    def __init__(self, root_dir, csv_file, transform=None):
-        self.root_dir = root_dir
+class DRDataset(Dataset):
+    def __init__(self, df, img_dir, transform=None):
+        self.df = df
+        self.img_dir = img_dir
         self.transform = transform
-        self.data = pd.read_csv(csv_file)
+
+        self.image_index = {}
+
+        for root, _, files in os.walk(img_dir):
+            for f in files:
+                self.image_index[f] = os.path.join(root, f)
 
     def __len__(self):
-        return len(self.data)
+        return len(self.df)
 
     def __getitem__(self, idx):
-        img_name = self.data.iloc[idx, 0] + ".png"
-        label = int(self.data.iloc[idx, 1])
+        img_id = self.df.iloc[idx, 0] + ".png"
+        label = int(self.df.iloc[idx, 1])
 
-        # FIX: search inside class folders
-        img_path = None
-        for cls in os.listdir(self.root_dir):
-            possible = os.path.join(self.root_dir, cls, img_name)
-            if os.path.exists(possible):
-                img_path = possible
-                break
+        img_path = self.image_index.get(img_id, None)
 
         if img_path is None:
-            raise FileNotFoundError(f"{img_name} not found")
+            raise FileNotFoundError(f"Missing image: {img_id}")
 
         image = Image.open(img_path).convert("RGB")
 
@@ -38,38 +62,26 @@ class RetinopathyDataset(Dataset):
         return image, label
 
 
-def get_transforms():
-    train_transform = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-    ])
-
-    val_transform = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-    ])
-
-    return train_transform, val_transform
 
 
-def get_data_loaders():
-    data_dir = "data/colored_images/colored_images"
-    csv_file = "data/trainLabels.csv"
+def get_data_loaders(
+    data_dir="data/colored_images/colored_images",
+    csv_file="data/trainLabels.csv",
+    batch_size=32
+):
+
+    df = pd.read_csv(csv_file)
+
+    # simple stratified split
+    train_df = df.sample(frac=0.8, random_state=42)
+    val_df = df.drop(train_df.index)
 
     train_tf, val_tf = get_transforms()
 
-    dataset = RetinopathyDataset(data_dir, csv_file, transform=train_tf)
+    train_dataset = DRDataset(train_df, data_dir, train_tf)
+    val_dataset = DRDataset(val_df, data_dir, val_tf)
 
-    train_size = int(0.8 * len(dataset))
-    val_size = len(dataset) - train_size
-
-    train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
-
-    train_dataset.dataset.transform = train_tf
-    val_dataset.dataset.transform = val_tf
-
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=2)
-    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False, num_workers=2)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
     return train_loader, val_loader

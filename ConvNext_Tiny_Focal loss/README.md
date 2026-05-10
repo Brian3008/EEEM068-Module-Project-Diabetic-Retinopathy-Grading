@@ -1,5 +1,5 @@
 # Diabetic Retinopathy Grading using ConvNeXt-Tiny
-## Experiment - Stratified split implementation
+## Experiment - Focal Loss addition
 
 ## Overview
 This project implements an end-to-end deep learning pipeline for automated diabetic retinopathy (DR) grading using retinal fundus images. The model is based on ConvNeXt-Tiny (224×224 pretrained on ImageNet-1K) and is fine-tuned to classify images into 5 DR severity levels.
@@ -7,7 +7,7 @@ This project implements an end-to-end deep learning pipeline for automated diabe
 The workflow includes data preprocessing, class imbalance handling, model training, evaluation, and interpretability using GradCAM.
 
 ## Experiment Changes
-- Focal Loss for class imbalance handling instead of WeightedRandomSampler
+- Addition of Focal Loss for class imbalance handling instead of WeightedRandomSampler
 
 ## Observations
 - Focal loss does not perform better than weighted Random Sampler in this experiment setting though it increases the qwk and metric scores it dails in handling the class imbalance which can be observed in confusion matrix
@@ -36,6 +36,7 @@ Train-validation split (85% / 15%)
 Stratified Split
 Data augmentation
 ImageNet normalisation
+Focal Loss
 criterion
 AdamW optimiser
 Layer-wise learning rates

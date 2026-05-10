@@ -1,0 +1,9 @@
+The project was done with:
+Python 3.9+
+PyTorch (with CUDA for GPU training)
+timm
+opencv-python
+pandas, numpy, matplotlib, seaborn
+scikit-learn
+tqdm
+pytorch-grad-cam

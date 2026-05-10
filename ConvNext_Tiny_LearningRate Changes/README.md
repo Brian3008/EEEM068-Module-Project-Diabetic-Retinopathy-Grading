@@ -1,5 +1,5 @@
 # Diabetic Retinopathy Grading using ConvNeXt-Tiny
-## Experiment - Stratified split implementation
+## Experiment - Learning Rate Changes and other hypermeters tuning
 
 ## Overview
 This project implements an end-to-end deep learning pipeline for automated diabetic retinopathy (DR) grading using retinal fundus images. The model is based on ConvNeXt-Tiny (224×224 pretrained on ImageNet-1K) and is fine-tuned to classify images into 5 DR severity levels.

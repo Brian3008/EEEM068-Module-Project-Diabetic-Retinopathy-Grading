@@ -1,4 +1,5 @@
 # Diabetic Retinopathy Classification using ConvNeXt
+## First Run - Understanding DR Grading and optimising it without same common Parameters.
 
 ## 1. Overview
 
@@ -98,7 +99,7 @@ QWK is used as the primary metric due to the ordinal nature of the classificatio
 | Validation Accuracy | 0.77  |
 | QWK Score           | 0.75  |
 
-The model demonstrates strong ordinal agreement with ground truth labels.
+The model demonstrates strong ordinal agreement with ground truth labels but there exist Class imbalances which are to be handled.
 
 ---
 
@@ -141,3 +142,5 @@ python3 main.py
 ## 13. Author
 
 Name: Bilimagga Ganesh Suhas
+URN: 6970288
+Model: ConvNext Tiny

@@ -1,5 +1,5 @@
 # Diabetic Retinopathy Grading using ConvNeXt-Tiny
-## Experiment - Stratified split implementation
+## Experiment - Class Imbalance handling for Class 1 - Mild DR
 
 ## Overview
 This project implements an end-to-end deep learning pipeline for automated diabetic retinopathy (DR) grading using retinal fundus images. The model is based on ConvNeXt-Tiny (224×224 pretrained on ImageNet-1K) and is fine-tuned to classify images into 5 DR severity levels.
@@ -12,7 +12,7 @@ The workflow includes data preprocessing, class imbalance handling, model traini
 
 
 ## Observations
-- Can observe that the Mild class collapsed due to higher weightage which hindered the No DR class recall.
+- Can observe the hinderance in No DR class which collapsed due to higher weightage in the Mild DR class recall.
 
 ## Dataset
 - Source: Kaggle Diabetic Retinopathy Dataset  
